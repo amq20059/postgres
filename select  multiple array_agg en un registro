@@ -1,0 +1,12 @@
+SELECT p.id,
+	p.objeto_contratacion,
+	p.codigo,
+	p.unidad_solicitante ,
+	(SELECT g.anio FROM gestion g) AS anio,
+ ( select TO_CHAR( va.fecha_accion,'DD-Mon-YYYY')  from vista_acciones va where va.id = p.id And  va.id_estado =16 order by va.id_accion desc limit 1) as fecha_autorizacion,
+ ( select m.descripcion from modalidad m where  m.id= p.id_modalidad )as mimodalidad,
+ (select array_to_string(array_agg((select pr.razon_social from proveedor pr where pr.id= vi.id_proveedor) ), ',') from public.vista_listado_item_proveedor vi where vi.id_proceso= p.id) as proveedores
+ --,(select TO_CHAR(g.fecha_accion,'DD-MM-YYYY') from proceso_acciones  g  Where g.id_proceso = p.id and  id_estado=16 order by g.id desc limit 1   ) as fecha_presentacion
+FROM proceso p
+WHERE 
+	 p.id =125
