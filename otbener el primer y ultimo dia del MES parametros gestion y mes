@@ -1,0 +1,26 @@
+Otbener  el ultimo dia del mes
+
+ 	CREATE OR REPLACE FUNCTION last_day_month(tyear INTEGER, tmonth INTEGER)
+RETURNS VARCHAR AS
+$$ BEGIN
+    RETURN TO_CHAR(TO_TIMESTAMP(tyear || '-' || TO_CHAR(tmonth,'FM00') || '-01', 'YYYY-MM-DD') + INTERVAL '1 month' - INTERVAL '1 days', 'YYYY-MM-DD');
+END; $$
+LANGUAGE plpgsql;
+
+
+-- select last_day_month(2022,2 )
+--------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------
+select date_trunc('month',current_date) --"2014-10-01 00:00:00+02"
+-------------------------------------------------------------------
+
+-- select extract (day from (select date_trunc('month',current_date) +'1month' ::interval -'1sec' ::interval))   --"31"
+
+Por lo tanto, para obtener el primer y último día del mes actual:
+
+-- select extract (day from (select date_trunc('month',current_date))), extract (day from (select date_trunc('month',current_date) +'1month' ::interval -'1sec' ::interval))
+-------------------------------------------------------------------------------------------------
+Y para el último día del mes anterior: Le resto un segundo al primer día de este mes
+
+-- select date_trunc('month',current_date) -'1sec' ::interval  --"2014-09-30 23:59:59+02"
+
